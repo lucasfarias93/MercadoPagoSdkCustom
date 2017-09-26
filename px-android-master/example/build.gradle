@@ -1,0 +1,47 @@
+apply plugin: 'com.android.application'
+apply plugin: 'jacoco-android'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
+
+    defaultConfig {
+        applicationId "com.mercadopago.example"
+        minSdkVersion 9
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    dexOptions {
+        // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
+        preDexLibraries = preDexEnabled && !travisBuild
+    }
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+            multiDexEnabled true
+            versionNameSuffix " Debug"
+            debuggable true
+        }
+    }
+    productFlavors {
+        dev {
+        }
+        prod {
+        }
+    }
+
+}
+
+dependencies {
+    devCompile project(path: ':sdk', configuration:'devDebug')
+    prodCompile project(path: ':sdk', configuration:'prodDebug')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.android.support:design:25.0.0'
+}
